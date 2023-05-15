@@ -1,0 +1,179 @@
+---
+title: "Parkinson's Disease Death Rate in the US , state by state"
+date: "2023-05-11"
+output:
+  html_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(plotly)   
+library(dplyr)     
+library(readr)     
+library(htmlwidgets) 
+library(RColorBrewer)
+
+```
+## Motivation 
+
+Visualizing data on a map is a powerful way to understand geographic patterns and trends. In this project, I was able to create an interactive map of the United States that displays the death rate due to Parkinson's disease on a state-by-state basis from 2005 to 2021. This was made possible by the plotly library in R, which allowed me to create an interactive and dynamic visualization that can be easily shared and explored by others. As someone who has always been drawn to map visualizations exploring many maps trends on regular basis , I am grateful to this module for this opportunity to learn the how powerfull r language is . 
+
+## Overview 
+
+This project presents a map showing the death rate due to Parkinson's disease in the United States from 2005 to 2021, with a focus on the variation of the disease impact across different states. By highlighting the evidence of the disease impact on a state-by-state basis, this map aims to increase awareness about Parkinson's disease and encourage funding and research for this debilitating illness. Additionally, the map aims to emphasize the importance of providing support to families affected by Parkinson's disease, whether they have a member living with the disease or have lost someone due to it. Overall, this document aims to contribute to efforts to improve the management of Parkinson's disease in the United States.
+
+## Data Origins
+The data was originated by the CDC , Centers for Disease Contol and Prevention using their Wide-ranging ONline Data for Epidemiologic Research (WONDER) which is an easy-to-use internet system that makes the information resources of the Centers for Disease Control and Prevention (CDC) available to public health professionals and the public at large. It provides access to a wide array of public health information.
+
+CDC WONDER furthers CDC's mission of health promotion and disease prevention by speeding and simplifying access to public health information for state and local health departments, the Public Health Service, and the academic public health community. CDC WONDER is valuable in public health research, decision making, priority setting, program evaluation, and resource allocation.(definition by the CDC) . This dataset provides access to the multiple cause-of-death data, which includes information on the underlying and contributing causes of death. Users can filter the dataset to extract data on Parkinson's disease deaths, and can also filter by year, location, age, and other demographic variables . The data can be accessed [here](https://www.cdc.gov/nchs/pressroom/sosmap/parkinsons_disease_mortality/parkinsons_disease.htm)
+
+## Research Questions
+
+Parkinson's disease is a neurodegenerative disorder that primarily affects movement and is classified as the second most common disease associated with aging, after Alzheimer's. With the advances in treatment during the last two decades, it is important to understand if the death rate due to Parkinson's disease is increasing or decreasing across the United States. This map aims to answer this question by providing a visual representation of the death rate throughout the different US states. The map is useful for comparisons as many variables, such as diagnosis and treatment guidelines, are static across all states. By analyzing the differences in death rates, it may be possible to identify factors that contribute to the development or progression of Parkinson's disease.In addition , highlighting the findings for public and health sectors . 
+
+## Packages used  
+
+ggplot2 version 3.4.2 , A data visualization package in R used to create static, high-quality and customizable graphics
+
+plotly version 4.10.1 , A package for creating interactive and dynamic visualizations in R
+
+dplyr version1.1.1 , A package for data manipulation in R that allows for easy data filtering, grouping, summarizing, and more
+
+readr version 2.1.4 , A package in R for reading in rectangular data, including csv, tsv, and fixed-width files.
+
+htmlwidgets version 1.6.2 , A package for creating interactive HTML widgets from R code, allowing for easy integration of R output into web pages.
+
+RColorBrewer version 1.1.3 , A package in R for creating color palettes for data visualizations
+
+## Data preparation
+
+The data file is composed of five columns: year, state, rate, deaths, and URL. After selecting the YEAR, STATE, and RATE columns, it is important to note that when coloring the states using Plotly, the state abbreviation found in the STATE column is required .The rate is he number of deaths per 100,000 total population and its age adjusted . I also would like to highlight that the data is for 2005 and 2014-2021 , unfourtunatly I couldn't find a state by state data for the missing period . Overall , including 2005 is giving a better understanding when sliding through the period. The following steps outline the process.
+
+
+
+## Load data
+
+Firstly, the data should be read from a file named parkinson.csv and the required columns should be selected. It's important to note that when creating this type of visualization, choosing the number of deaths could give a false impression about the impact, while selecting the death rate provides a more accurate illustration.
+
+```{r}
+parkinson_df <- read_csv("Data/parkinson.csv") %>%
+  select(YEAR, STATE, RATE)
+# Preview the first few rows of the data
+head(parkinson_df)
+```
+
+## Visualisation 
+The following code sets various options for the appearance of a plot. It defines the font and label options for the plot, specifying the family, size, and color of the font. Additionally, it sets the background color of the labels, along with the color of the font and the border around the label. Finally, the code defines a color palette to be used in the plot, using the RColorBrewer package to generate a palette of colors ranging from red to blue .
+```{r}
+font = list(
+  family = "Lucida Grande",
+  size = 5,
+  color = "black"
+)
+
+label = list(
+  bgcolor = "#EEEEEE",
+  bordercolor = "transparent",
+  font = font
+)
+
+# Define the color palette
+color_palette <- colorRampPalette(rev(RColorBrewer::brewer.pal(11, "RdBu")))(100)
+```
+The following code creates an interactive map using the plotly package in R. The first line initializes a variable called "parkinson_map". Then specifying the data frame that will be used for the visualization and sets the location mode to "USA-states". The "frame" argument is set to the "YEAR" variable in the data frame, which will allow the user to view the data for each year separately.The "add_trace" function adds a trace to the map that represents the data from each state. The "locations" argument specifies the states, the "z" argument sets the value to be visualized to the "RATE" column in the data frame, and the "colors" and "color" arguments are used to set the color palette for the visualization. The "layout" function customizes the appearance of the map. The "geo" argument is used to set the scope of the map to the United States as without it we ll have a map for the whole world and the background color is set to "#F5F5F5". Then, elements have been added , which are a line and an annotation. The line has been added using the shapes option,. In this case, the shape is defined as a line with a starting point of (-0.1, 0) and an ending point of (1.1, 0). The color of the line has been set to black and its width to 2.
+
+An annotation has been added using the annotations option. where the annotation is defined as a text box with the text "U.S. Centers for Disease Control and Prevention (CDC)". The x and y coordinates have been set to (-0.1, -0.065) relative to the plot. The config option at the end is used to hide the plot's display mode bar.In addition to another text annotation .
+
+```{r}
+parkinson_map <- plot_geo(parkinson_df,
+                          locationmode = "USA-states",
+                          frame = ~YEAR) %>%
+  add_trace(locations = ~STATE,
+            z = ~RATE,
+            zmin = 0,
+            zmax = max(parkinson_df$RATE),
+            colors = color_palette, # Set the color palette
+            color = ~RATE) %>%
+  layout(geo = list(scope = 'usa',
+                    bgcolor = '#F5F5F5'), # Set the background color of the map
+         title = list(text = "Death rate due to Parkinson disease in the US 2005-2021 , State by state ",
+                      font = list(family = "Lucida Grande" , size = 15),
+                      x = 0),
+         font = list(family = "Lucida Grande"),
+         paper_bgcolor = '#F5F5F5', # Set the background color of the plot
+         plot_bgcolor = '#F5F5F5',
+
+           shapes = list(
+             type = "line",
+             x0 = -0.1,
+             y0 = 0,
+             x1 = 1.1,
+             y1 = 0,
+             line = list(color = "black", width = 1)
+         ),
+         annotations = list(
+           list(
+             x = -0.1,
+             y = -0.065,
+             text = "U.S. Centers for Disease Control and Prevention (CDC)",
+             showarrow = FALSE,
+             xref = "paper",
+             yref = "paper",
+             font = list(
+               family = "Arial",
+               size = 13,
+              color = "black"
+             )
+           ),
+           list(
+             x = -0.115,
+             y = 0,
+             text = "*Age-Adjusted Death Rates per 100,000 total population ",
+             showarrow = FALSE,
+             xref = "paper",
+             yref = "paper",
+             font = list(
+               family = "Arial",
+               size = 12,
+               color = "black"
+             )
+           )
+         )
+  ) %>%
+  config(displayModeBar = FALSE)
+```
+Now saving the interactive map to the graph folder using the saveWidget function from the htmlwidgets library 
+
+```{r}
+
+# Save the plot as an HTML file in the "Graph" folder
+htmlwidgets::saveWidget(parkinson_map, file = "Graph/parkinson_map.html")
+```
+And now , displaying the map 
+
+
+```{r}
+
+# Display the plotly map
+parkinson_map
+
+```
+
+## Interpretations
+Displaying state-by-state death rates for Parkinson's disease in the same country has several strengths. Firstly, it allows for a direct comparison of the data across different states, which can help to identify any patterns or trends that may exist. Secondly, by focusing on a single country, the treatment approach and guidelines for managing Parkinson's disease are likely to be more consistent than if data were compared across multiple countries. This can help to minimize any variations that may occur due to differences in healthcare systems or cultural factors. Additionally, this approach can provide more detailed insights into how the disease is impacting different regions within the same country, which can be useful for targeting resources and interventions where they are most needed
+
+Regional variations: The map can show how death rates vary by region, highlighting areas that have higher or lower rates than others. This can help identify potential regional risk factors or public health challenges.
+
+Temporal trends: By displaying death rates over time, the map can help identify changes in death rates , highlighting areas that have seen significant improvements or areas that continue to experience high rates.
+
+## Limitations
+
+Death rate data is not be available for all states for from 2006-2013, which can reduce the ability to have better insight in those years . 
+
+## Summary 
+
+The map presented in this report shows the rise in Parkinson's disease death rate, taking into account age adjustments, based on data provided by the CDC. Monitoring and analyzing long-term trends in Parkinson's death rates is crucial for further research to identify potential reasons behind the increased mortality. Additionally, updating vital statistics regarding Parkinson's death rates can aid in prioritizing healthcare allocation and shaping policies related to the disease .Furthermore, by examining the patterns and correlations between Parkinson's disease incidence and mortality rates in each state, valuable insights can be gained regarding the impact of various risk factors. Identifying associations between environmental factors such as exposure to farming chemicals, Vietnam-era exposure to Agent Orange, and occupational contact with heavy metals, detergents, and solvents, alongside exploring ethnic and lifestyle factors, may shed light on preventable causes or provide directions for future research and statistical analysis of more risk factors . This approach has the potential to uncover new information regarding the influence of these factors on Parkinson's disease and guide preventive measures and focused investigations.
+\`\`\`{r}
