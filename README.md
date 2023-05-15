@@ -20,6 +20,7 @@ This project utilizes Packrat for package management.
 - index.Rmd : R markdown 
 - script.R : R script to produce the map 
 - Codebook.txt 
+- Extentions_flollowup : future work by me 
 - Data folder including the parkinsn.csv data
 - Graph folder : includes the map file as an html 
 - Parkinson folder includes the packrat for packages managment
