@@ -22,5 +22,6 @@ This project utilizes Packrat for package management.
 - Codebook.txt 
 - Data folder including the parkinsn.csv data
 - Graph folder : includes the map file as an html 
-- Parkinson folder includes the packrat for packages managment 
+- Parkinson folder includes the packrat for packages managment
+## GitHub page  
 The GitHub page for the project can be visited [here](https://aliwais.github.io/PSY6422_Project/).
