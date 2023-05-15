@@ -1,0 +1,6 @@
+ggplot2 (version 3.4.2)
+plotly (version 4.10.1)
+dplyr (version 1.1.1)
+readr (version 2.1.4)
+htmlwidgets (version 1.6.2)
+RColorBrewer (version 1.1.3)
