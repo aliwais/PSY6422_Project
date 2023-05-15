@@ -25,3 +25,5 @@ This project utilizes Packrat for package management.
 - Parkinson folder includes the packrat for packages managment
 ## GitHub page  
 The GitHub page for the project can be visited [here](https://aliwais.github.io/PSY6422_Project/).
+## Extentions and follow up 
+This map will be followed up by investigation a state by state link between industrialization and air pollution to parkinson incidence and death rate 
